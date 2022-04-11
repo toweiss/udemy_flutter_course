@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">170266205033-2om8kd7lahaivtvd7ae5t5g439k3el95.apps.googleusercontent.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">170266205033</string>
+    <string name="google_api_key" translatable="false">AIzaSyB4YfJdh-HAKhWGaPNbQLdnezmljgvIwxo</string>
+    <string name="google_app_id" translatable="false">1:170266205033:android:3d36ae9690705de27bbbf8</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyB4YfJdh-HAKhWGaPNbQLdnezmljgvIwxo</string>
+    <string name="google_storage_bucket" translatable="false">time-tracker-udemy-aba71.appspot.com</string>
+    <string name="project_id" translatable="false">time-tracker-udemy-aba71</string>
+</resources>
