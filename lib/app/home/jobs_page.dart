@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:time_tracker/app/home/models/job.dart';
@@ -56,11 +57,29 @@ class JobsPage extends StatelessWidget {
   }
 
   void _createJob(BuildContext context) {
-    final database = Provider.of<Database>(context, listen: false);
-    database.createJob(Job(
-      name: "Blogging",
-      ratePerHour: 10,
-    ));
+    try {
+      final database = Provider.of<Database>(context, listen: false);
+      database.createJob(Job(
+        name: "Blogging",
+        ratePerHour: 10,
+      ));
+    } on FirebaseException catch (e) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("Operation failed."),
+            content: Text(e.message.toString()),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text("OK"),
+              )
+            ],
+          );
+        },
+      );
+    }
   }
 
   @override
@@ -81,10 +100,33 @@ class JobsPage extends StatelessWidget {
           )
         ],
       ),
+      body: _buildContents(context),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _createJob(context),
         child: const Icon(Icons.add),
       ),
+    );
+  }
+
+  Widget _buildContents(BuildContext context) {
+    final database = Provider.of<Database>(context, listen: false);
+    return StreamBuilder<Iterable<Job>>(
+      stream: database.jobsStream(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final jobs = snapshot.data;
+          final children = jobs!.map((job) => Text(job.name)).toList();
+          return ListView(
+            children: children,
+          );
+        }
+        if (snapshot.hasError) {
+          return const Center(
+            child: Text("Some error occured."),
+          );
+        }
+        return const Center(child: CircularProgressIndicator());
+      },
     );
   }
 }
