@@ -3,9 +3,11 @@ import 'package:time_tracker/app/home/models/job.dart';
 import 'package:time_tracker/services/api_path.dart';
 
 abstract class Database {
-  void createJob(Job job);
+  void setJob(Job job);
   Stream<List<Job>> jobsStream();
 }
+
+String documentIDFromCurrentDate() => DateTime.now().toIso8601String();
 
 class FirestoreDatabase implements Database {
   FirestoreDatabase({required this.uid});
@@ -15,14 +17,14 @@ class FirestoreDatabase implements Database {
   final _service = FireStoreService.instance;
 
   @override
-  void createJob(Job job) => _service.setData(
-        path: APIPath.job(uid, "job_abc"),
+  void setJob(Job job) => _service.setData(
+        path: APIPath.job(uid, job.id),
         data: job.toMap(),
       );
 
   @override
   Stream<List<Job>> jobsStream() => _service.collectionStream(
         path: APIPath.jobs(uid),
-        builder: (data) => Job.fromMap(data),
+        builder: (data, documentId) => Job.fromMap(data, documentId),
       );
 }
